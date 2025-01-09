@@ -6,11 +6,11 @@ from psycopg2 import OperationalError
 from fastapi import FastAPI
 
 # ROUTERS
-from .routers.boards import boards_router
-from .routers.tasks import tasks_router
+from ..routers.boards import boards_router
+from ..routers.tasks import tasks_router
 
 # FUNCTIONS
-from postgres import connect_to_pg
+from ..postgres.connection import connect_to_pg
 from os import getenv
 
 try:

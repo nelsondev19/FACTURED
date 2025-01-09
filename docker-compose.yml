@@ -9,7 +9,7 @@ services:
       - ./pgdata:/var/lib/postgresql/data
   backend:
     build:
-      context: ./src
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - 8000:8000
@@ -17,10 +17,8 @@ services:
       POSTGRES_URL: postgres://postgres:21TQIbxpu3LP@postgres:5432/trello
     develop:
       watch:
-      - action: sync
-        path: ./src
-        target: /app
-        ignore:
-          - venv/
-      - action: rebuild
-        path: ./src
+        - action: sync
+          path: ./backend/src
+          target: /src/app
+        - action: rebuild
+          path: ./backend/src
