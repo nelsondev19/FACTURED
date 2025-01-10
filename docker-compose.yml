@@ -2,6 +2,8 @@ services:
   postgres:
     image: postgres:16
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: 21TQIbxpu3LP
       POSTGRES_DB: trello
@@ -12,13 +14,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - 5000:8000
     environment:
       POSTGRES_URL: postgres://postgres:21TQIbxpu3LP@postgres:5432/trello
-    develop:
-      watch:
-        - action: sync
-          path: ./backend/src
-          target: /src/app
-        - action: rebuild
-          path: ./backend/src

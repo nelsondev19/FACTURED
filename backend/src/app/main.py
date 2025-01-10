@@ -1,6 +1,5 @@
 # TYPES
 from contextlib import asynccontextmanager
-from psycopg2 import OperationalError
 
 # CLASS
 from fastapi import FastAPI
@@ -10,14 +9,7 @@ from ..routers.boards import boards_router
 from ..routers.tasks import tasks_router
 
 # FUNCTIONS
-from ..postgres.connection import connect_to_pg
-from os import getenv
-
-try:
-    pg_connection = connect_to_pg(getenv("POSTGRES_URL"))
-    print("CONNECTED TO DATABASE!")
-except OperationalError as e:
-    print(f"Failed to connect to PostgreSQL after multiple attempts: {e}")
+from ..postgres.connection import pg_connection
 
 
 @asynccontextmanager
