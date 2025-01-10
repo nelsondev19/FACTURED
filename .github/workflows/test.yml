@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Installing linter
+        run: pip install ruff
+      - name: Executing linter
+        run: |
+          cd backend
+          ruff check
+      - name: Checking Docker image
+        run: |
+          cd backend
+          docker build . --check
