@@ -36,13 +36,6 @@ function Home() {
     const handleFocus = () => {
       fetchData();
     };
-
-    window.addEventListener("focus", handleFocus);
-
-    // Remove event listener on component unmount
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
   }, []);
 
   if (Loading) {
