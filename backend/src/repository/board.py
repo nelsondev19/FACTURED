@@ -5,6 +5,7 @@ from ..app.models import Board
 # FUNCTIONS
 from itertools import groupby
 
+
 class BoardRepository:
     def create(self, board: Board):
         try:
@@ -63,7 +64,7 @@ GROUP BY
             def key_func(item):
                 return item[0]
 
-            for group in groupby(data, key_func):
+            for _, group in groupby(data, key_func):
                 for item in group:
                     tasks = item[4]
                     result.append(
