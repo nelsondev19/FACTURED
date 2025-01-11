@@ -32,10 +32,6 @@ function Home() {
     };
 
     fetchData();
-
-    const handleFocus = () => {
-      fetchData();
-    };
   }, []);
 
   if (Loading) {
