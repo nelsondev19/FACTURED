@@ -5,7 +5,7 @@ from ..repository.board import BoardRepository
 boards_router = APIRouter()
 
 
-@boards_router.get("/")
+@boards_router.get("/all")
 def get_all_boards():
     return BoardRepository().read()
 

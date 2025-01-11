@@ -12,4 +12,5 @@ export type BoardType = {
   name: string;
   description: string;
   created_at: string;
+  tasks: Array<TaskType>;
 };

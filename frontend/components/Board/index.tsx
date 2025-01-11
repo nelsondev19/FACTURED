@@ -1,6 +1,3 @@
-// ENVS
-import { VITE_BOARD_API } from "../../envs";
-
 // TYPES
 import { DragEvent } from "react";
 import { BoardType, TaskType } from "../../types";
@@ -16,29 +13,9 @@ interface Props {
   TaskSelected: TaskType | null;
   setTaskSelected: React.Dispatch<React.SetStateAction<TaskType | null>>;
 }
+const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
 
 function Board({ board, TaskSelected, setTaskSelected }: Props) {
-  const [Loading, setLoading] = useState(true);
-
-  const [Tasks, setTasks] = useState<Array<TaskType>>([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await (
-          await fetch(`${VITE_BOARD_API}/tasks/board/${board.id}`)
-        ).json();
-
-        if (Array.isArray(res)) {
-          setTasks(res);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [board.id]);
-
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     const taskId = e.dataTransfer.getData("task_id");
 
@@ -58,7 +35,7 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
           TaskSelectedCopy.board_id = board.id;
 
           const res = await (
-            await fetch(`${VITE_BOARD_API}/tasks/update`, {
+            await fetch(`${endpoint}/tasks/update`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
@@ -77,10 +54,6 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
     }, 300);
   };
 
-  if (Loading) {
-    return <div className="board" />;
-  }
-
   return (
     <div>
       <h3 className="text-center">{board.name}</h3>
@@ -89,7 +62,7 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
-        {Tasks.map((task) => {
+        {board.tasks.map((task) => {
           return (
             <Task
               key={task.id}

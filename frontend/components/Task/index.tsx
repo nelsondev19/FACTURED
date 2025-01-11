@@ -1,6 +1,3 @@
-// ENVS
-import { VITE_BOARD_API } from "../../envs";
-
 // TYPES
 import { TaskType } from "../../types";
 import { DragEvent, ChangeEvent, useState } from "react";
@@ -10,6 +7,9 @@ interface Props {
   TaskSelected: TaskType | null;
   setTaskSelected: React.Dispatch<React.SetStateAction<TaskType | null>>;
 }
+
+const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
+
 function Task({ task, TaskSelected, setTaskSelected }: Props) {
   const [CurrentStatus, setCurrentStatus] = useState(task.status);
 
@@ -36,8 +36,8 @@ function Task({ task, TaskSelected, setTaskSelected }: Props) {
         setCurrentStatus(status);
 
         const res = await (
-          await fetch(`${VITE_BOARD_API}/tasks/update`, {
-            method: "PATCH",
+          await fetch(`${endpoint}/tasks/update`, {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },

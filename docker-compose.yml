@@ -13,7 +13,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - 5000:8000
+    expose:
+      - 8000
     environment:
       POSTGRES_URL: postgres://postgres:21TQIbxpu3LP@postgres:5432/trello

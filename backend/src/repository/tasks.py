@@ -24,32 +24,6 @@ class TaskRepository:
             print(e.message)
             return {"error": e}
 
-    def read_by_board_id(self, board_id: int):
-        try:
-            pg_cursor.execute(
-                "SELECT * FROM public.tasks WHERE board_id = %s;", (board_id,)
-            )
-
-            result = []
-
-            tasks = list(pg_cursor.fetchall())
-
-            for task in tasks:
-                result.append(
-                    {
-                        "id": task[0],
-                        "name": task[1],
-                        "description": task[2],
-                        "status": task[3],
-                        "created_at": task[4],
-                        "board_id": task[5],
-                    }
-                )
-            return result
-        except Exception as e:
-            print(e)
-            return {"error": e}
-
     def update(self, task: Task):
         try:
             pg_cursor.execute(

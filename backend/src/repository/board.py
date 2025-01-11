@@ -2,6 +2,9 @@
 from ..postgres.connection import pg_connection, pg_cursor
 from ..app.models import Board
 
+# FUNCTIONS
+from itertools import groupby
+
 
 class BoardRepository:
     def create(self, board: Board):
@@ -18,27 +21,67 @@ class BoardRepository:
             print(e.message)
             return {"error": e}
 
+    # GET BOARDS AND 50 TASKS
     def read(self):
         try:
-            pg_cursor.execute("SELECT * FROM public.boards;")
+            limit = 50
+            query = f"""
+        WITH
+  limited_tasks AS (
+    SELECT
+      t.*,
+      ROW_NUMBER() OVER (
+        PARTITION BY
+          t.board_id
+        ORDER BY
+          t.id
+      ) AS row_num
+    FROM
+      tasks t
+  )
+SELECT
+  b.*,
+  json_agg(lt.*) AS tasks
+FROM
+  public.boards b
+  LEFT JOIN (
+    SELECT
+      *
+    FROM
+      limited_tasks
+    WHERE
+      row_num <= {limit}
+  ) lt ON lt.board_id = b.id
+GROUP BY
+  b.id;
+            """
+            pg_cursor.execute(query=query)
+
+            data = pg_cursor.fetchall()
 
             result = []
 
-            boards = list(pg_cursor.fetchall())
+            def key_func(item):
+                return item[0]
 
-            for board in boards:
-                result.append(
-                    {
-                        "id": board[0],
-                        "name": board[1],
-                        "description": board[2],
-                        "created_at": board[3],
-                    }
-                )
+            for key, group in groupby(data, key_func):
+                print(f"Grupo con clave {key}:")
+                for item in group:
+                    tasks = item[4]
+                    result.append(
+                        {
+                            "id": item[0],
+                            "name": item[1],
+                            "description": item[2],
+                            "created_at": item[3],
+                            "tasks": [] if tasks[0] is None else tasks,
+                        }
+                    )
+
             return result
         except Exception as e:
             print(e)
-            return {"error": e}
+            return []
 
     def update(self, board: Board):
         try:

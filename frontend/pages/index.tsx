@@ -1,16 +1,16 @@
-// ENVS
-import { VITE_BOARD_API } from "./envs";
-
+"use client";
 // TYPES
-import { BoardType, TaskType } from "./types";
+import { BoardType, TaskType } from "../types";
 
 // HOOKS
 import { useEffect, useState } from "react";
 
 // COMPONENTS
-import Board from "./components/Board";
+import Board from "../components/Board";
 
-function App() {
+const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
+
+function Home() {
   const [Boards, setBoards] = useState<Array<BoardType>>([]);
 
   const [TaskSelected, setTaskSelected] = useState<TaskType | null>(null);
@@ -18,18 +18,31 @@ function App() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const res = await (await fetch(`${VITE_BOARD_API}/boards`)).json();
+        const boards = await (await fetch(`${endpoint}/boards/all`)).json();
 
-        if (Array.isArray(res)) {
-          setBoards(res);
+        if (Array.isArray(boards)) {
+          setBoards(boards);
           setLoading(false);
         }
       } catch (error) {
         console.log(error);
       }
-    })();
+    };
+
+    fetchData();
+
+    const handleFocus = () => {
+      fetchData();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    // Remove event listener on component unmount
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
   }, []);
 
   if (Loading) {
@@ -52,4 +65,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
