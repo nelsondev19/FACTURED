@@ -40,9 +40,10 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
   }, [board.id]);
 
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
-    const task_id = e.dataTransfer.getData("task_id");
+    const taskId = e.dataTransfer.getData("task_id");
 
-    const task = document.getElementById(task_id) as HTMLElement;
+    const task = document.getElementById(taskId) as HTMLElement;
+
     task.style.display = "block";
 
     e.currentTarget.appendChild(task);
@@ -52,6 +53,7 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
         const TaskSelectedCopy = TaskSelected;
 
         TaskSelectedCopy.board_id = board.id;
+
         const res = await (
           await fetch(`${VITE_BOARD_API}/tasks/update`, {
             method: "PATCH",
@@ -78,10 +80,10 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
     >
-      <h3 style={{ textAlign: "center" }}>{board.name}</h3>
+      <h3>{board.name}</h3>
 
       {Loading ? (
-        <p style={{ textAlign: "center" }}>Loading...</p>
+        <p>Loading...</p>
       ) : (
         <>
           {Tasks.map((task) => {
