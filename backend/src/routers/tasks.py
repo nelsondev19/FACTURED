@@ -5,9 +5,9 @@ from ..repository.tasks import TaskRepository
 tasks_router = APIRouter()
 
 
-@tasks_router.get("/")
-def get_all_tasks():
-    return TaskRepository().read()
+@tasks_router.get("/board/{id}")
+def get_tasks_by_board_id(id: int):
+    return TaskRepository().read_by_board_id(board_id=id)
 
 
 @tasks_router.post("/create")

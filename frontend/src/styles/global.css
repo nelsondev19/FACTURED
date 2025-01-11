@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  gap: 20px;
+}
+
+.board {
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  height: 75dvh;
+  width: 400px;
+  background-color: lightgray;
+}
+
+.task {
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: white;
+  cursor: move;
+  margin-bottom: 20px;
+}

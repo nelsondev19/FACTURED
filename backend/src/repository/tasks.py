@@ -24,9 +24,11 @@ class TaskRepository:
             print(e.message)
             return {"error": e.message}
 
-    def read(self):
+    def read_by_board_id(self, board_id: int):
         try:
-            pg_cursor.execute("SELECT * FROM public.tasks;")
+            pg_cursor.execute(
+                "SELECT * FROM public.tasks WHERE board_id = %s;", (board_id,)
+            )
 
             result = []
 
@@ -38,7 +40,9 @@ class TaskRepository:
                         "id": task[0],
                         "name": task[1],
                         "description": task[2],
-                        "created_at": task[3],
+                        "status": task[3],
+                        "created_at": task[4],
+                        "board_id": task[5],
                     }
                 )
             return result
