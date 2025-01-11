@@ -21,39 +21,35 @@ class BoardRepository:
             print(e.message)
             return {"error": e}
 
-    # GET BOARDS AND 50 TASKS
+    # GET BOARDS AND 50 MOST RECENTS TASKS
     def read(self):
         try:
             limit = 50
             query = f"""
-        WITH
-  limited_tasks AS (
+WITH limited_tasks AS (
+    SELECT 
+        t.*, 
+        ROW_NUMBER() OVER (PARTITION BY t.board_id ORDER BY t.created_at DESC) AS row_num
+    FROM 
+        tasks t
+),
+boards_with_tasks AS (
     SELECT
-      t.*,
-      ROW_NUMBER() OVER (
-        PARTITION BY
-          t.board_id
-        ORDER BY
-          t.id
-      ) AS row_num
+        b.*,
+        json_agg(lt.* ORDER BY lt.created_at DESC) AS tasks
     FROM
-      tasks t
-  )
-SELECT
-  b.*,
-  json_agg(lt.*) AS tasks
-FROM
-  public.boards b
-  LEFT JOIN (
-    SELECT
-      *
-    FROM
-      limited_tasks
-    WHERE
-      row_num <= {limit}
-  ) lt ON lt.board_id = b.id
-GROUP BY
-  b.id;
+        public.boards b
+    LEFT JOIN (
+        SELECT *
+        FROM limited_tasks
+        WHERE row_num <= {limit}
+    ) lt ON lt.board_id = b.id
+    GROUP BY
+        b.id
+)
+SELECT *
+FROM boards_with_tasks
+ORDER BY created_at ASC;
             """
             pg_cursor.execute(query=query)
 
