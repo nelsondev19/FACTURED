@@ -46,58 +46,60 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
 
     task.style.display = "block";
 
-    e.currentTarget.appendChild(task);
+    const firstChild = e.currentTarget.firstChild;
 
-    if (TaskSelected !== null) {
-      try {
-        const TaskSelectedCopy = TaskSelected;
+    e.currentTarget.insertBefore(task, firstChild);
 
-        TaskSelectedCopy.board_id = board.id;
+    setTimeout(async () => {
+      if (TaskSelected !== null) {
+        try {
+          const TaskSelectedCopy = TaskSelected;
 
-        const res = await (
-          await fetch(`${VITE_BOARD_API}/tasks/update`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(TaskSelectedCopy),
-          })
-        ).json();
+          TaskSelectedCopy.board_id = board.id;
 
-        if (res.message === "success") {
-          console.log("Task updated! ID ->", task.id);
+          const res = await (
+            await fetch(`${VITE_BOARD_API}/tasks/update`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(TaskSelectedCopy),
+            })
+          ).json();
+
+          if (res.message === "success") {
+            console.log("Task updated! ID ->", task.id);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
       }
-    }
+    }, 300);
   };
 
-  return (
-    <div
-      id={`${board.id}`}
-      className="board"
-      onDrop={handleDrop}
-      onDragOver={(e) => e.preventDefault()}
-    >
-      <h3>{board.name}</h3>
+  if (Loading) {
+    return <div className="board" />;
+  }
 
-      {Loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {Tasks.map((task) => {
-            return (
-              <Task
-                key={task.id}
-                task={task}
-                TaskSelected={TaskSelected}
-                setTaskSelected={setTaskSelected}
-              />
-            );
-          })}
-        </>
-      )}
+  return (
+    <div>
+      <h3 className="text-center">{board.name}</h3>
+      <div
+        className="board"
+        onDrop={handleDrop}
+        onDragOver={(e) => e.preventDefault()}
+      >
+        {Tasks.map((task) => {
+          return (
+            <Task
+              key={task.id}
+              task={task}
+              TaskSelected={TaskSelected}
+              setTaskSelected={setTaskSelected}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

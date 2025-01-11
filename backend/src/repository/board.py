@@ -16,7 +16,7 @@ class BoardRepository:
             return {"message": "success"}
         except Exception as e:
             print(e.message)
-            return {"error": e.message}
+            return {"error": e}
 
     def read(self):
         try:
@@ -38,7 +38,7 @@ class BoardRepository:
             return result
         except Exception as e:
             print(e)
-            return {"error": e.message}
+            return {"error": e}
 
     def update(self, board: Board):
         try:
@@ -52,7 +52,7 @@ class BoardRepository:
             return {"message": "success"}
         except Exception as e:
             print(e.message)
-            return {"error": e.message}
+            return {"error": e}
 
     def delete(self, id: int):
         try:

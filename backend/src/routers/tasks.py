@@ -15,7 +15,7 @@ def create_task(task: Task):
     return TaskRepository().create(task=task)
 
 
-@tasks_router.patch("/update")
+@tasks_router.put("/update")
 def update_task(task: Task):
     return TaskRepository().update(task=task)
 

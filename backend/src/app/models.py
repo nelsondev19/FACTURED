@@ -17,6 +17,6 @@ class Task(BaseModel):
     id: int
     name: str
     description: str
-    status: str
+    status: str = "Pending"
     created_at: Optional[datetime] = None
     board_id: int

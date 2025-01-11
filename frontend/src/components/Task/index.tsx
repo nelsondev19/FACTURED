@@ -34,6 +34,7 @@ function Task({ task, TaskSelected, setTaskSelected }: Props) {
 
         TaskSelectedCopy.status = status;
         setCurrentStatus(status);
+
         const res = await (
           await fetch(`${VITE_BOARD_API}/tasks/update`, {
             method: "PATCH",
@@ -44,10 +45,8 @@ function Task({ task, TaskSelected, setTaskSelected }: Props) {
           })
         ).json();
 
-        console.log(res);
-
         if (res.message === "success") {
-          console.log("Task updated! ID ->", task.id);
+          console.log("Status from task updated! ID ->", task.id);
         }
       } catch (error) {
         console.log(error);

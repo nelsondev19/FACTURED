@@ -15,6 +15,8 @@ function App() {
 
   const [TaskSelected, setTaskSelected] = useState<TaskType | null>(null);
 
+  const [Loading, setLoading] = useState(true);
+
   useEffect(() => {
     (async () => {
       try {
@@ -22,12 +24,17 @@ function App() {
 
         if (Array.isArray(res)) {
           setBoards(res);
+          setLoading(false);
         }
       } catch (error) {
         console.log(error);
       }
     })();
   }, []);
+
+  if (Loading) {
+    return <h1 className="center">Loading...</h1>;
+  }
 
   return (
     <div className="container">

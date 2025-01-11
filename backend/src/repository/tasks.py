@@ -22,7 +22,7 @@ class TaskRepository:
             return {"message": "success"}
         except Exception as e:
             print(e.message)
-            return {"error": e.message}
+            return {"error": e}
 
     def read_by_board_id(self, board_id: int):
         try:
@@ -48,7 +48,7 @@ class TaskRepository:
             return result
         except Exception as e:
             print(e)
-            return {"error": e.message}
+            return {"error": e}
 
     def update(self, task: Task):
         try:
@@ -68,8 +68,7 @@ class TaskRepository:
 
             return {"message": "success"}
         except Exception as e:
-            print(e.message)
-            return {"error": e.message}
+            return {"error": e}
 
     def delete(self, id: int):
         try:
@@ -80,4 +79,4 @@ class TaskRepository:
             return {"message": "success"}
         except Exception as e:
             print(e.message)
-            return {"error": e.message}
+            return {"error": e}

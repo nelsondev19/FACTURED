@@ -23,3 +23,33 @@
   cursor: move;
   margin-bottom: 20px;
 }
+
+.board {
+  overflow-y: auto;
+  height: 70vh;
+  transition: 1s;
+}
+.board::-webkit-scrollbar {
+  width: 7px;
+  height: 8px;
+  background: rgb(228, 225, 225);
+}
+/* Handle */
+.board::-webkit-scrollbar-thumb {
+  background: blue;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pending {
+  background-color: rgb(185, 168, 168);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95dvh;
+}
