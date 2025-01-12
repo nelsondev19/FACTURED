@@ -1,12 +1,18 @@
 # FACTURED
 Prueba tecnica de FACTURED
 
-
 Opción 2: Caso práctico propuesto
 
 Video demo
 
 [demo](./demo.mp4)
+
+
+Correr proyecto
+
+```bash
+docker compose up
+```
 
 
 Funcionalidades (backend)
