@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 // COMPONENTS
 import Board from "../components/Board";
 import ModalAddBoard from "@/components/Board/ModalAddBoard";
+import ModalAddTask from "@/components/Task/ModalAddTask";
 
 const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
 
@@ -37,6 +38,9 @@ function Home() {
 
   const [ShowModalBoard, setShowModalBoard] = useState(false);
 
+  const [ShowModalTask, setShowModalTask] = useState(false);
+  const [ModalTaskBoard, setModalTaskBoard] = useState<number | null>(null);
+
   if (Loading) {
     return <h1 className="center height95">Loading...</h1>;
   }
@@ -52,6 +56,8 @@ function Home() {
             setBoards={setBoards}
             PreviousBoard={PreviousBoard}
             setPreviousBoard={setPreviousBoard}
+            setShowModalTask={setShowModalTask}
+            setModalTaskBoard={setModalTaskBoard}
           />
         );
       })}
@@ -61,6 +67,14 @@ function Home() {
         <ModalAddBoard
           setShowModalBoard={setShowModalBoard}
           setBoards={setBoards}
+        />
+      )}
+
+      {ShowModalTask && (
+        <ModalAddTask
+          setShowModalTask={setShowModalTask}
+          setBoards={setBoards}
+          currentBoard={ModalTaskBoard}
         />
       )}
     </div>

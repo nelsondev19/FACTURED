@@ -11,6 +11,8 @@ interface Props {
   setBoards: Dispatch<SetStateAction<BoardType[]>>;
   PreviousBoard: number | null;
   setPreviousBoard: Dispatch<SetStateAction<number | null>>;
+  setShowModalTask: Dispatch<SetStateAction<boolean>>;
+  setModalTaskBoard: Dispatch<SetStateAction<number | null>>;
 }
 const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
 
@@ -20,8 +22,12 @@ function Board({
   setBoards,
   PreviousBoard,
   setPreviousBoard,
+  setShowModalTask,
+  setModalTaskBoard,
 }: Props) {
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
+    // EFFECT TO INSERT IN A BOX
+
     const taskId = e.dataTransfer.getData("task_id");
 
     const task = document.getElementById(taskId) as HTMLElement;
@@ -31,6 +37,8 @@ function Board({
     const firstChild = e.currentTarget.firstChild;
 
     e.currentTarget.insertBefore(task, firstChild);
+
+    // UPDATING TASK
 
     const boardSelected = Boards.find(({ id }) => id === PreviousBoard);
 
@@ -91,6 +99,16 @@ function Board({
   return (
     <div>
       <h3 className="text-center">{board.name}</h3>
+      <div className="center" style={{ marginBottom: "10px" }}>
+        <button
+          onClick={() => {
+            setModalTaskBoard(board.id);
+            setShowModalTask(true);
+          }}
+        >
+          Add Task
+        </button>
+      </div>
       <div
         className="board"
         onDrop={handleDrop}

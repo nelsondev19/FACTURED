@@ -7,7 +7,7 @@ class TaskRepository:
     def create(self, task: Task):
         try:
             pg_cursor.execute(
-                "INSERT INTO public.tasks (name, description, status, created_at, updated_at, board_id) VALUES (%s, %s, %s, %s, %s, %s);",
+                "INSERT INTO public.tasks (name, description, status, created_at, updated_at, board_id) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id, name, description, status, created_at, updated_at, board_id;",
                 (
                     task.name,
                     task.description,
@@ -18,9 +18,19 @@ class TaskRepository:
                 ),
             )
 
+            new_task = list(pg_cursor.fetchone())
+
             pg_connection.commit()
 
-            return {"message": "success"}
+            return {
+                "id": new_task[0],
+                "name": new_task[1],
+                "description": new_task[2],
+                "status": new_task[3],
+                "created_at": new_task[4],
+                "updated_at": new_task[5],
+                "board_id": new_task[6],
+            }
         except Exception as e:
             pg_connection.rollback()
             print(e)
