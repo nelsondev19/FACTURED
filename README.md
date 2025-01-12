@@ -5,8 +5,7 @@ Opción 2: Caso práctico propuesto
 
 Video demo
 
-[demo](./demo.mp4)
-
+[demo](https://github.com/nelsondev19/FACTURED/raw/refs/heads/master/demo.mp4)
 
 Correr proyecto
 
