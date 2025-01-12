@@ -30,6 +30,7 @@ Funcionalidades (backend)
 
 ✅ Swagger UI [http://localhost:8000/docs](http://localhost:8000/docs)
 
+✅ GitHub Actions para correr el linter con `ruff`
 ❌ Generar reportes con conteo de tareas por estado y tablero, con estadísticas básicas como proporción de tareas completadas.
 
 ❌ Uso de autenticación segura (JWT, OAuth).
