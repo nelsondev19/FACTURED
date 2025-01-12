@@ -19,6 +19,7 @@ def create_tables(connection: connection, cursor: cursor):
             description VARCHAR(255) NOT NULL,
             status VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             board_id INTEGER NOT NULL,
             FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE
         )

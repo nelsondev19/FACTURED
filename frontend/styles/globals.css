@@ -51,5 +51,52 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.height95 {
   height: 95dvh;
+}
+
+.backdrop {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  width: 100%;
+}
+
+.modal {
+  padding-bottom: 1.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  width: 40rem;
+  border: 2px solid rgb(27, 26, 26);
+}
+
+.modal > div {
+  display: flex;
+  flex-direction: column;
+}
+.modal > div > input {
+  padding: 5px;
+  border-radius: 0.375rem;
+}
+
+.close {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  cursor: pointer;
 }

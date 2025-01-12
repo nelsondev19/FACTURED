@@ -5,6 +5,11 @@ from ..repository.tasks import TaskRepository
 tasks_router = APIRouter()
 
 
+@tasks_router.get("/all/{prev_id}")
+def get_task_pagination(prev_id: int):
+    return TaskRepository().read(prev_id=prev_id)
+
+
 @tasks_router.post("/create")
 def create_task(task: Task):
     return TaskRepository().create(task=task)

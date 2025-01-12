@@ -10,13 +10,21 @@ class BoardRepository:
     def create(self, board: Board):
         try:
             pg_cursor.execute(
-                "INSERT INTO public.boards (name, description, created_at) VALUES (%s, %s, %s);",
+                "INSERT INTO public.boards (name, description, created_at) VALUES (%s, %s, %s)  RETURNING id, name, description, created_at;",
                 (board.name, board.description, board.created_at),
             )
 
+            new_board = list(pg_cursor.fetchone())
+
             pg_connection.commit()
 
-            return {"message": "success"}
+            return {
+                "id": new_board[0],
+                "name": new_board[1],
+                "description": new_board[2],
+                "created_at": new_board[3],
+                "tasks": [],
+            }
         except Exception as e:
             print(e.message)
             return {"error": e}
@@ -29,14 +37,14 @@ class BoardRepository:
 WITH limited_tasks AS (
     SELECT 
         t.*, 
-        ROW_NUMBER() OVER (PARTITION BY t.board_id ORDER BY t.created_at DESC) AS row_num
+        ROW_NUMBER() OVER (PARTITION BY t.board_id ORDER BY t.id DESC) AS row_num
     FROM 
         tasks t
 ),
 boards_with_tasks AS (
     SELECT
         b.*,
-        json_agg(lt.* ORDER BY lt.created_at DESC) AS tasks
+        json_agg(lt.* ORDER BY lt.id DESC) AS tasks
     FROM
         public.boards b
     LEFT JOIN (
@@ -75,6 +83,7 @@ ORDER BY created_at ASC;
 
             return result
         except Exception as e:
+            pg_connection.rollback()
             print(e)
             return []
 
@@ -89,6 +98,7 @@ ORDER BY created_at ASC;
 
             return {"message": "success"}
         except Exception as e:
+            pg_connection.rollback()
             print(e.message)
             return {"error": e}
 
@@ -100,5 +110,6 @@ ORDER BY created_at ASC;
 
             return {"message": "success"}
         except Exception as e:
+            pg_connection.rollback()
             print(e)
             return {"error": e}

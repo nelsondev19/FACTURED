@@ -1,16 +1,18 @@
 // TYPES
 import { TaskType } from "../../types";
-import { DragEvent, ChangeEvent, useState } from "react";
+import { DragEvent, ChangeEvent, Dispatch, SetStateAction } from "react";
+
+// HOOKS
+import { useState } from "react";
 
 interface Props {
   task: TaskType;
-  TaskSelected: TaskType | null;
-  setTaskSelected: React.Dispatch<React.SetStateAction<TaskType | null>>;
+  setPreviousBoard: Dispatch<SetStateAction<number | null>>;
 }
 
 const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
 
-function Task({ task }: Props) {
+function Task({ task, setPreviousBoard }: Props) {
   const [CurrentStatus, setCurrentStatus] = useState(task.status);
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
@@ -21,6 +23,7 @@ function Task({ task }: Props) {
     setTimeout(() => {
       target.style.display = "none";
     }, 0);
+    setPreviousBoard(task.board_id);
   };
 
   const changeStatus = async (e: ChangeEvent<HTMLSelectElement>) => {

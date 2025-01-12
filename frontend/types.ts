@@ -3,8 +3,9 @@ export type TaskType = {
   name: string;
   description: string;
   status: string;
-  board_id: number;
   created_at: string;
+  updated_at: string;
+  board_id: number;
 };
 
 export type BoardType = {

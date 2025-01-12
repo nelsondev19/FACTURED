@@ -1,21 +1,26 @@
 // TYPES
-import { DragEvent } from "react";
+import { DragEvent, Dispatch, SetStateAction } from "react";
 import { BoardType, TaskType } from "../../types";
-
-// HOOKS
-import { useEffect, useState } from "react";
 
 // COMPONENTS
 import Task from "../Task";
 
 interface Props {
   board: BoardType;
-  TaskSelected: TaskType | null;
-  setTaskSelected: React.Dispatch<React.SetStateAction<TaskType | null>>;
+  Boards: BoardType[];
+  setBoards: Dispatch<SetStateAction<BoardType[]>>;
+  PreviousBoard: number | null;
+  setPreviousBoard: Dispatch<SetStateAction<number | null>>;
 }
 const endpoint = `${process.env.NEXT_PUBLIC_BOARD_API}`;
 
-function Board({ board, TaskSelected, setTaskSelected }: Props) {
+function Board({
+  board,
+  Boards,
+  setBoards,
+  PreviousBoard,
+  setPreviousBoard,
+}: Props) {
   const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     const taskId = e.dataTransfer.getData("task_id");
 
@@ -27,31 +32,60 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
 
     e.currentTarget.insertBefore(task, firstChild);
 
-    setTimeout(async () => {
-      if (TaskSelected !== null) {
-        try {
-          const TaskSelectedCopy = TaskSelected;
+    const boardSelected = Boards.find(({ id }) => id === PreviousBoard);
 
-          TaskSelectedCopy.board_id = board.id;
+    const taskSelectedCopy = boardSelected?.tasks.find(
+      ({ id }) => id === Number(taskId)
+    );
 
-          const res = await (
-            await fetch(`${endpoint}/tasks/update`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(TaskSelectedCopy),
-            })
-          ).json();
+    if (taskSelectedCopy !== undefined) {
+      try {
+        taskSelectedCopy.board_id = board.id;
+        taskSelectedCopy.updated_at = new Date().toISOString();
 
-          if (res.message === "success") {
-            console.log("Task updated! ID ->", task.id);
-          }
-        } catch (error) {
-          console.log(error);
+        const res = await (
+          await fetch(`${endpoint}/tasks/update`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(taskSelectedCopy),
+          })
+        ).json();
+
+        if (res.message === "success") {
+          console.log("Task updated! ID ->", task.id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const getMoreTasks = async () => {
+    try {
+      const tasksLengthArray = board.tasks.length;
+
+      const lastTask = board.tasks[tasksLengthArray - 1].id;
+
+      const tasks = (await (
+        await fetch(`${endpoint}/tasks/all/${lastTask}`)
+      ).json()) as Array<TaskType>;
+
+      const boardSelectedIndex = Boards.findIndex(({ id }) => id === board.id);
+
+      if (Array.isArray(tasks)) {
+        if (boardSelectedIndex !== -1) {
+          const copyBoards = [...Boards];
+
+          copyBoards[boardSelectedIndex].tasks.push(...tasks);
+
+          setBoards(copyBoards);
         }
       }
-    }, 300);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -67,11 +101,16 @@ function Board({ board, TaskSelected, setTaskSelected }: Props) {
             <Task
               key={task.id}
               task={task}
-              TaskSelected={TaskSelected}
-              setTaskSelected={setTaskSelected}
+              setPreviousBoard={setPreviousBoard}
             />
           );
         })}
+
+        {board.tasks.length > 0 && (
+          <div className="center">
+            <button onClick={getMoreTasks}>Get more tasks</button>
+          </div>
+        )}
       </div>
     </div>
   );
