@@ -18,7 +18,7 @@ Funcionalidades (backend)
 
 ✅ CRUD para tableros y tareas
 
-✅ Mover tareas entre estados (pendiente, en progreso, completada)
+✅ Cambiar estado de la tarea (pendiente, en progreso, completada)
 
 ✅ Base de datos PostgreSQL
 
