@@ -74,5 +74,5 @@ Detalles técnicos de la solución
 
 - Cuando hago la petición a los tableros tambien obtiene una lista de tareas con un maximo de 50, luego con el boton dentro del tablero pido otras 50 tareas y asi es como hago la paginación
 
-
+> [!IMPORTANT]
 > Una cosas no las hice por falta de tiempo pero realmente tengo el conocimiento para hacerlas
