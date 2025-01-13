@@ -39,7 +39,7 @@ Funcionalidades (backend)
 Detalles técnicos de la solución
 
 - utilice `psycopg2` para conectarme a la base de datos ya que me gusta escribir mis propias consultas (RAW SQL)
-- Framework `FastAPI` robusto eficiente y tipado por defecto
+- Framework `FastAPI` robusto, eficiente y tipado por defecto
 
 
 
